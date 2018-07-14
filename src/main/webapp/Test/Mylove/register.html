@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<style>
+.login {
+	height: 400px;
+	width: 400px;
+	background-color: #fff;
+	margin:0 auto;
+	padding-top: 75px;
+	padding-left: 43px;
+}
+.login .userInfo input {
+	width: 340px;
+	height: 42px;
+	padding-left: 19px;
+}
+
+.login .userInfo input[type="password"] {
+	margin-top: 30px;
+	margin-bottom: 30px;
+}
+.login .btn a {
+	display: block;
+	width: 360px;
+	height: 42px;
+	background-color: #000;
+	color: #fff;
+	text-align: center;
+	line-height: 42px;
+	font-size: 14px;
+	margin-top: 30px;
+}
+
+</style>
+<body> 
+	<div class="login">
+            <div class="userInfo">
+				<input type="text" name="userName" id="userName" placeholder="请输入用户名">
+				<span id="message" style="color:red"></span>
+				<input type="password" name="passWord1"  id="passWord1" placeholder="请输入密码">
+                <span id="message1" style="color:red"></span>
+                <input type="password" name="passWord2"  id="passWord2" placeholder="请再次输入密码">
+                <span id="message2" style="color:red"></span>
+            </div>
+            <div class="btn">
+                <a href="#" id="btn">注册</a>
+            </div>
+    </div>        
+</body>
+</html>
+<script src="../bootstrap/js/jquery-1.12.4.js"></script>
+
+<script>
+    var baseUrl = 'http://MyLove:8080';
+    var addUserUrl = baseUrl + '/userInfo/addUser.do'
+
+    $('#btn').click(function(){
+          //获取用户名和密码
+        var username = $('#userName').val()
+        var password1 = $('#passWord1').val()
+        var password2 = $('#passWord2').val()
+        
+        //进行检验
+        if(!username){
+            $("#message").html('请输入用户名') 
+            return 
+        }
+        if( !password1){
+            $("#message1").html('请输入密码') 
+			return
+         } 
+         if(password2 != password1){
+             $("#message2").html('两次输入密码不一样')
+            return
+        } 
+        $.ajax({
+            url: addUserUrl,
+            type:'post',
+            data:{
+                userName:username,
+                passWord01:password1, 
+                passWord02:password2     
+            },
+            success:function(backData){
+                // console.log(backData);
+                if(JSON.parse(backData).resultCode=='0'){
+                    alert('注册成功')
+                    // window.location.href = '../Mylove/login.html'
+                    window.location.href='./login.html'
+                }
+            }
+
+        }) 
+
+    })
+
+</script>

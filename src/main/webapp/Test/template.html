@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+</head>
+<body>
+    
+   用户名: <input type="text" name="username" id="user" placeholder="请输入用户名">
+    <span id="message" style="color:red;"></span>
+    <br>
+    <br>
+   密码: <input type="text" name="password1" id="passWord1" placeholder="请输入密码">
+   <span id="message1" style="color:red;"></span>
+    <br>
+    <br>
+   再次输入密码:<input type="text" name="password2" id="passWord2" placeholder="请再次输入密码">
+   <span id="message2" style="color:red;"></span>
+   <br>
+   <br>
+    <input type="button" name="btn"  id="btn" value="注册"><br>
+    <input type="button" name="delUser"  id="delUserBtn" value="注销">
+
+    <!-- <label>
+            请输入账号：<input type="text" id="user" value=""/>
+
+            <span id="message" color='red'></span>
+
+            <input type="button" value="检查账号" onclick="checkUser(user.value)">
+    </label> -->
+        
+</body>
+</html>
+<script src="./bootstrap/js/jquery-1.12.4.js"></script>
+<script>
+    var baseUrl = 'http://MyLove:8080';
+    var addUserUrl = baseUrl + '/userInfo/addUser.do'
+    var checkUserName = baseUrl + '/userInfo/checkUserName.do'
+    var delUser = ""
+    $(function(){
+        
+            $('#user').blur(function(){
+                var name = $('#user').val()
+                if(name==""){
+                    $("#message").html('用户名不能为空')
+                    return
+                }else{
+                    checkOut()
+                    
+                }
+                var re=/^[a-zA-Z]\w{3,15}$/;
+                if(re.test(name)){
+                    $("#message").html('正确')
+                }else{
+                    $("#message").html('错误')
+                }
+            })
+            $("#passWord1").blur(function(){
+             var password1 = $("#passWord1").val() 
+                var reg = /^[A-Za-z0-9]{6,20}$/;
+                if(reg.test(password1)){
+                    $("#message1").html('密码格式正确')
+                }else{
+                    $('#message1').html('密码为6-20位数字和字母的组合')
+                    return
+                }
+            })
+            $('#passWord2').blur(function(){
+                var password1 = $("#passWord1").val() 
+                var password2 = $("#passWord2").val() 
+                if(password2 != password1){
+                    $("#message2").html('两次输入密码不一样')
+                     return
+                }
+            })
+             
+            //
+            function ajaxData(Url,Data,success){
+                $.ajax({
+                    url:Url,
+                    type:'post',
+                    data:Data,
+                    // dataType:'jsonp',
+                    success:function(backData){
+                    console.log(backData);
+                    if(JSON.parse(backData).resultCode=='0'){
+                        alert(success)
+                    }else{
+                        alert(JSON.parse(backData).msg)
+                    }
+                }
+                })
+            }
+
+
+
+            //  注册
+        $("#btn").click(function(){
+            var name = $('#user').val()
+            if(name==''){
+                $("#message").html('用户名不能为空')
+                return 
+            }
+
+            var ajax = {
+                "userName":$('#user').val(),
+                "passWord01":$('#passWord1').val(),
+                "passWord02":$('#passWord2').val(),
+            }
+            var success ="注册成功"
+            ajaxData(addUserUrl,ajax,success)
+          
+        })
+        
+        //用户名是否重复
+        function checkOut(){
+            
+            var ajax = {
+                "userName":$('#user').val(),
+            }
+            var success = "用户名不重复"
+            ajaxData(checkUserName,ajax,success)
+        }
+
+        //注销
+        $('#delUserBtn').click(function(){
+            var ajaxBtn = {
+                "userName":$('#user').val(),
+                "passWord01":$('#passWord1').val(),
+                "passWord02":$('#passWord2').val(),
+            }
+            var  success ="注销成功"
+            ajaxData(delUser,ajaxBtn,success)
+
+        })
+
+
+    })    
+
+
+ 
+
+</script>

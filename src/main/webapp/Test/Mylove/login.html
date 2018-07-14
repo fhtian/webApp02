@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<style>
+.login {
+	height: 400px;
+	width: 400px;
+	background-color: #fff;
+	margin:0 auto;
+	padding-top: 75px;
+	padding-left: 43px;
+}
+.login .userInfo input {
+	width: 340px;
+	height: 42px;
+	padding-left: 19px;
+}
+
+.login .userInfo input[type="password"] {
+	margin-top: 30px;
+	margin-bottom: 30px;
+}
+.login .btn a {
+	display: block;
+	width: 360px;
+	height: 42px;
+	background-color: #000;
+	color: #fff;
+	text-align: center;
+	line-height: 42px;
+	font-size: 14px;
+	margin-top: 30px;
+}
+
+</style>
+<body> 
+	<div class="login">
+            <div class="userInfo">
+				<input type="text" name="userName" id="userName" placeholder="用户名">
+				<span id="message" style="color:red"></span>
+				<input type="password" name="passWord"  id="passWord" placeholder="密码">
+				<span id="message1" style="color:red"></span>
+            </div>
+            <div class="btn">
+                <a href="#" id="btn">登录</a>
+            </div>
+    </div>        
+</body>
+</html>
+<script src="../bootstrap/js/jquery-1.12.4.js"></script>
+<script>
+    
+    var baseUrl = 'http://MyLove:8080';
+    var loginUrl = baseUrl + '/userInfo/login.do';
+
+    $(function(){
+        //给登录按钮加点击事件
+        $('#btn').click(function(){
+         //获取用户名和密码
+         var username = $('#userName').val()
+         var password = $('#passWord').val()
+         //进行验证
+         if( !username){
+            $("#message").html('请输入用户名') 
+			return 
+         }   
+         if( !password){
+            $("#message1").html('请输入密码') 
+			return
+         }   
+
+			$.ajax({
+				url:loginUrl,
+				type:'post',
+				data:{
+					userName:username,
+					passWord:password
+				},
+				success:function(backData){
+					console.log(backData);
+					if(JSON.parse(backData).resultCode=='0'){
+							window.location.href = '../Mylove/privateHomePage.html';
+						}else{
+							window.location.href = '../Mylove/login.html';
+						}
+				}
+			})
+
+        })
+    })
+
+
+
+</script>
